@@ -129,6 +129,7 @@ type RewriteRuleTransform struct {
 }
 
 type RewriteRuleTransformToText struct {
+	Type   string `yaml:"type,omitempty" json:"type,omitempty" desc:"The type of the transform. It can be one of prompt, scrape. Default is prompt. For scrape, the source text will be as the url to crawl the page, and the page will be converted to markdown."`
 	LLM    string `yaml:"llm,omitempty" json:"llm,omitempty" desc:"The LLM name to use. Default is the default LLM in llms section."`
 	Prompt string `yaml:"prompt,omitempty" json:"prompt,omitempty" desc:"The prompt to transform the source text. The source text will be injected into the prompt above. And you can use go template syntax to refer some built-in prompts, like {{ .summary }}. Available built-in prompts: category, tags, score, comment_confucius, summary, summary_html_snippet."`
 }

@@ -1,0 +1,5 @@
+I updated the configuration of pkg/config/config.go
+
+Please also update docs/config.md docs/config-zh.md
+
+As an Agent, you have permission to view the project directory, and you need to execute a search for the above files.

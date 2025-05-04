@@ -32,6 +32,7 @@ import (
 	"github.com/glidea/zenfeed/pkg/telemetry"
 	telemetrymodel "github.com/glidea/zenfeed/pkg/telemetry/model"
 	"github.com/glidea/zenfeed/pkg/util/buffer"
+	crawlutil "github.com/glidea/zenfeed/pkg/util/crawl"
 )
 
 // --- Interface code block ---
@@ -106,19 +107,28 @@ func (r *Rule) Validate() error { //nolint:cyclop
 
 	// Transform.
 	if r.Transform != nil {
-		if r.Transform.ToText.Prompt == "" {
-			return errors.New("to text prompt is required")
+		switch r.Transform.ToText.Type {
+		case ToTextTypePrompt, ToTextTypeScrape:
+		default:
+			return errors.Errorf("unknown transform type: %s", r.Transform.ToText.Type)
 		}
-		tmpl, err := template.New("").Parse(r.Transform.ToText.Prompt)
-		if err != nil {
-			return errors.Wrapf(err, "parse prompt template %s", r.Transform.ToText.Prompt)
+
+		switch r.Transform.ToText.Type {
+		case ToTextTypePrompt:
+			if r.Transform.ToText.Prompt == "" {
+				return errors.New("to text prompt is required")
+			}
+			tmpl, err := template.New("").Parse(r.Transform.ToText.Prompt)
+			if err != nil {
+				return errors.Wrapf(err, "parse prompt template %s", r.Transform.ToText.Prompt)
+			}
+			buf := buffer.Get()
+			defer buffer.Put(buf)
+			if err := tmpl.Execute(buf, promptTemplates); err != nil {
+				return errors.Wrapf(err, "execute prompt template %s", r.Transform.ToText.Prompt)
+			}
+			r.Transform.ToText.promptRendered = buf.String()
 		}
-		buf := buffer.Get()
-		defer buffer.Put(buf)
-		if err := tmpl.Execute(buf, promptTemplates); err != nil {
-			return errors.Wrapf(err, "execute prompt template %s", r.Transform.ToText.Prompt)
-		}
-		r.Transform.ToText.promptRendered = buf.String()
 	}
 
 	// Match.
@@ -153,13 +163,22 @@ func (r *Rule) From(c *config.RewriteRule) {
 	if c.Transform != nil {
 		t := &Transform{}
 		if c.Transform.ToText != nil {
-			t.ToText = &ToText{
+			toText := &ToText{
 				LLM:    c.Transform.ToText.LLM,
 				Prompt: c.Transform.ToText.Prompt,
 			}
+
+			toText.Type = ToTextType(c.Transform.ToText.Type)
+			if toText.Type == "" {
+				toText.Type = ToTextTypePrompt
+			}
+
+			t.ToText = toText
 		}
+
 		r.Transform = t
 	}
+
 	r.Match = c.Match
 	if r.Match == "" {
 		r.Match = c.MatchRE
@@ -173,6 +192,8 @@ type Transform struct {
 }
 
 type ToText struct {
+	Type ToTextType
+
 	// LLM is the name of the LLM to use.
 	LLM string
 
@@ -181,6 +202,13 @@ type ToText struct {
 	Prompt         string
 	promptRendered string
 }
+
+type ToTextType string
+
+const (
+	ToTextTypePrompt ToTextType = "prompt"
+	ToTextTypeScrape ToTextType = "scrape"
+)
 
 type Action string
 
@@ -508,6 +536,28 @@ func (r *rewriter) Labels(ctx context.Context, labels model.Labels) (rewritten m
 
 // transformText transforms text using configured LLM.
 func (r *rewriter) transformText(ctx context.Context, transform *Transform, text string) (string, error) {
+	switch transform.ToText.Type {
+	case ToTextTypeScrape:
+		return r.transformTextScrape(ctx, text)
+	case ToTextTypePrompt:
+		return r.transformTextPrompt(ctx, transform, text)
+	default:
+		return r.transformTextPrompt(ctx, transform, text)
+	}
+}
+
+func (r *rewriter) transformTextScrape(ctx context.Context, text string) (string, error) {
+	url := text
+
+	md, err := crawlutil.Markdown(ctx, url)
+	if err != nil {
+		return "", errors.Wrapf(err, "scrape %s", url)
+	}
+
+	return md, nil
+}
+
+func (r *rewriter) transformTextPrompt(ctx context.Context, transform *Transform, text string) (string, error) {
 	// Get LLM instance.
 	llm := r.Dependencies().LLMFactory.Get(transform.ToText.LLM)
 

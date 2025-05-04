@@ -44,6 +44,7 @@ func TestLabels(t *testing.T) {
 						SkipTooShortThreshold: ptr.To(10),
 						Transform: &Transform{
 							ToText: &ToText{
+								Type:   ToTextTypePrompt,
 								LLM:    "mock-llm",
 								Prompt: "{{ .category }}", // Using a simple template for testing
 							},
@@ -79,6 +80,7 @@ func TestLabels(t *testing.T) {
 						SkipTooShortThreshold: ptr.To(10),
 						Transform: &Transform{
 							ToText: &ToText{
+								Type:   ToTextTypePrompt,
 								LLM:    "mock-llm",
 								Prompt: "{{ .category }}",
 							},
@@ -148,6 +150,7 @@ func TestLabels(t *testing.T) {
 						SkipTooShortThreshold: ptr.To(10),
 						Transform: &Transform{
 							ToText: &ToText{
+								Type:           ToTextTypePrompt,
 								LLM:            "mock-llm",
 								Prompt:         "{{ .category }}",
 								promptRendered: "Analyze the content and categorize it...",
@@ -186,6 +189,7 @@ func TestLabels(t *testing.T) {
 						SkipTooShortThreshold: ptr.To(10),
 						Transform: &Transform{
 							ToText: &ToText{
+								Type:           ToTextTypePrompt,
 								LLM:            "mock-llm",
 								Prompt:         "{{ .category }}",
 								promptRendered: "Analyze the content and categorize it...",
