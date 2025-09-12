@@ -1,0 +1,24 @@
+name: Merge upstream branches
+on:
+  push:
+  schedule:
+    - cron:  '0 19 * * *'
+  watch:
+    types: [started]
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Merge upstream
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git pull --unshallow
+          git remote add upstream https://github.com/glidea/zenfeed.git
+          git fetch upstream
+          git checkout main
+          git merge --no-edit upstream/main
+          git push origin main
+          git fetch upstream --tags
+          git push --tags
