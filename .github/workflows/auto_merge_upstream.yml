@@ -1,4 +1,8 @@
 name: Merge upstream branches
+
+permissions:
+  contents: write
+
 on:
   push:
   schedule:
@@ -8,17 +12,33 @@ on:
 jobs:
   merge:
     runs-on: ubuntu-latest
+    if: ${{ github.event.repository.fork }}
     steps:
-      - uses: actions/checkout@v5
-      - name: Merge upstream
-        run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'actions@github.com'
-          git pull --unshallow
-          git remote add upstream https://github.com/glidea/zenfeed.git
-          git fetch upstream
-          git checkout main
-          git merge --no-edit upstream/main
-          git push origin main
-          git fetch upstream --tags
-          git push --tags
+      # Step 1: run a standard checkout action
+      - name: Checkout target repo
+        uses: actions/checkout@v5
+
+      # Step 2: run the sync action
+      - name: Sync upstream changes
+        id: sync
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
+        with:
+          upstream_sync_repo: glidea/zenfeed
+          upstream_sync_branch: main
+          target_sync_branch: main
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }} # automatically generated, no need to set
+
+          # Set test_mode true to run tests instead of the true action!!
+          test_mode: false
+
+      # Step 3: Display a sample message based on the sync output var 'has_new_commits'
+      - name: New commits found
+        if: steps.sync.outputs.has_new_commits == 'true'
+        run: echo "New commits were found to sync."
+    
+      - name: No new commits
+        if: steps.sync.outputs.has_new_commits == 'false'
+        run: echo "There were no new commits."
+      
+      - name: Show value of 'has_new_commits'
+        run: echo ${{ steps.sync.outputs.has_new_commits }}
