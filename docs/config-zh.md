@@ -59,6 +59,7 @@
 | `scrape.past`            | `time.Duration` | 抓取 Feed 的回溯时间窗口。例如 `1h` 表示只抓取过去 1 小时的 Feed。                                                                                     | `24h`  | 否                                  |
 | `scrape.interval`        | `time.Duration` | 抓取每个源的频率 (全局默认值)。例如 `1h`。                                                                                                             | `1h`   | 否                                  |
 | `scrape.rsshub_endpoint` | `string`        | RSSHub 的端点。你可以部署自己的 RSSHub 服务器或使用公共实例 (参见 [RSSHub 文档](https://docs.rsshub.app/guide/instances))。例如 `https://rsshub.app`。 |        | 是 (如果使用了 `rsshub_route_path`) |
+| `scrape.rsshub_access_key`  | `string`        | RSSHub 的访问密钥。用于访问控制。(详情见 [RSSHub文档访问控制](https://docs.rsshub.app/deploy/config#access-control-configurations)) |        | 否 |
 | `scrape.sources`         | `对象列表`      | 用于抓取 Feed 的源列表。详见下方的 **抓取源配置**。                                                                                                    | `[]`   | 是 (至少一个)                       |
 
 ### 抓取源配置 (`scrape.sources[]`)

@@ -80,6 +80,7 @@ func (c *Config) From(app *config.App) {
 				URL:             app.Scrape.Sources[i].RSS.URL,
 				RSSHubEndpoint:  app.Scrape.RSSHubEndpoint,
 				RSSHubRoutePath: app.Scrape.Sources[i].RSS.RSSHubRoutePath,
+				RSSHubAccessKey: app.Scrape.RSSHubAccessKey,
 			}
 		}
 	}

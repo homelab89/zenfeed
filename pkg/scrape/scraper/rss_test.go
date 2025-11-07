@@ -122,6 +122,55 @@ func TestNewRSS(t *testing.T) {
 				},
 			},
 		},
+		{
+			Scenario: "Valid Configuration - RSSHub with Access Key",
+			Given:    "a valid configuration with RSSHub details and access key",
+			When:     "creating a new RSS reader",
+			Then:     "should succeed, construct the URL with access key, and return a valid reader",
+			GivenDetail: givenDetail{
+				config: &ScrapeSourceRSS{
+					RSSHubEndpoint:  "http://rsshub.app/",
+					RSSHubRoutePath: "/_/test",
+					RSSHubAccessKey: "testkey",
+				},
+			},
+			WhenDetail: whenDetail{},
+			ThenExpected: thenExpected{
+				wantErr: false,
+				validateFunc: func(t *testing.T, r reader) {
+					Expect(r).NotTo(BeNil())
+					rssReader, ok := r.(*rssReader)
+					Expect(ok).To(BeTrue())
+					Expect(rssReader.config.URL).To(Equal("http://rsshub.app/_/test?key=testkey"))
+					Expect(rssReader.config.RSSHubEndpoint).To(Equal("http://rsshub.app/"))
+					Expect(rssReader.config.RSSHubRoutePath).To(Equal("/_/test"))
+					Expect(rssReader.config.RSSHubAccessKey).To(Equal("testkey"))
+				},
+			},
+		},
+		{
+			Scenario: "Valid Configuration - URL with Access Key",
+			Given:    "a valid configuration with URL and access key",
+			When:     "creating a new RSS reader",
+			Then:     "should succeed, append access key to URL, and return a valid reader",
+			GivenDetail: givenDetail{
+				config: &ScrapeSourceRSS{
+					URL:             "http://example.com/feed",
+					RSSHubAccessKey: "testkey",
+				},
+			},
+			WhenDetail: whenDetail{},
+			ThenExpected: thenExpected{
+				wantErr: false,
+				validateFunc: func(t *testing.T, r reader) {
+					Expect(r).NotTo(BeNil())
+					rssReader, ok := r.(*rssReader)
+					Expect(ok).To(BeTrue())
+					Expect(rssReader.config.URL).To(Equal("http://example.com/feed"))
+					Expect(rssReader.config.RSSHubAccessKey).To(Equal("testkey"))
+				},
+			},
+		},
 	}
 
 	// --- Run tests ---

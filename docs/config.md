@@ -59,6 +59,7 @@ This section configures parameters related to the Jina AI Reader API, primarily 
 | `scrape.past`            | `time.Duration`   | Time window to look back when scraping feeds. E.g., `1h` means only scrape feeds from the past 1 hour.                                                                                 | `24h`         | No                                   |
 | `scrape.interval`        | `time.Duration`   | Frequency to scrape each source (global default). E.g., `1h`.                                                                                                                          | `1h`          | No                                   |
 | `scrape.rsshub_endpoint` | `string`          | Endpoint for RSSHub. You can deploy your own RSSHub server or use a public instance (see [RSSHub Documentation](https://docs.rsshub.app/guide/instances)). E.g., `https://rsshub.app`. |               | Yes (if `rsshub_route_path` is used) |
+| `scrape.rsshub_access_key`  | `string` | The access key for RSSHub. Used for access control. (see [RSSHub config](https://docs.rsshub.app/deploy/config#access-control-configurations))| | No |
 | `scrape.sources`         | `list of objects` | List of sources to scrape feeds from. See **Scrape Source Configuration** below.                                                                                                       | `[]`          | Yes (at least one)                   |
 
 ### Scrape Source Configuration (`scrape.sources[]`)
