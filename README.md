@@ -1,5 +1,3 @@
-[Nano Banana🍌 公益站](https://image-generation.zenfeed.xyz/)：集成 Twitter 热门 Prompt，轻松玩转各种姿势
----
 [English](README-en.md)
 
 ---
@@ -52,14 +50,6 @@ zenfeed 是你的 <strong>AI 信息中枢</strong>。它既是<strong>智能 RSS
 **epub2rss**: 把 epub 电子书转成每日更新一个章节的 RSS Feed，[join waitlist](https://epub2rss.pages.dev/)
 
 **one-coffee**: 一款类似 syft，万物追踪的日报产品（差异点：支持播客等多模态；高质量信源，主攻 AI 领域）。下方加我微信加入 waitlist
-
----
-
-**赞助项目可以领取 Gemini Key**
-
-<a href="https://afdian.com/a/glidea"><img src="docs/images/sponsor.png" width="500"></a>
-<br/>
-<a href="https://afdian.com/a/glidea">赞助项目，支持发展</a>
 
 ---
 
@@ -215,17 +205,25 @@ $env:API_KEY = "sk-..."; docker-compose -p zenfeed up -d
 <table>
   <tr>
     <td align="center">
-      <img src="docs/images/wechat.png" alt="Wechat QR Code" width="300">
+      <img src="https://github.com/glidea/zenfeed/blob/main/docs/images/wechat.png?raw=true" alt="Wechat QR Code" width="300">
       <br>
       <strong>AI 学习交流社群</strong>
     </td>
     <td align="center">
-      <img src="docs/images/sponsor.png" width="500">
+      <img src="https://github.com/glidea/banana-prompt-quicker/blob/main/images/glidea.png?raw=true" width="250">
       <br>
-      <strong><a href="https://afdian.com/a/glidea">请杯奶茶 🧋</a></strong>
+      <strong><a href="https://glidea.zenfeed.xyz/">我的其它项目</a></strong>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" colspan="2">
+      <img src="https://github.com/glidea/banana-prompt-quicker/blob/main/images/readnote.png?raw=true" width="400">
+      <br>
+      <strong><a href="https://www.xiaohongshu.com/user/profile/5f7dc54d0000000001004afb">📕 小红书账号 - 持续分享 AI 原创</a></strong>
     </td>
   </tr>
 </table>
+
 
 都看到这里了，顺手点个 **Star ⭐️** 呗，这是我持续维护的最大动力！
 
