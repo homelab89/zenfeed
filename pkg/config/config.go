@@ -85,7 +85,7 @@ type App struct {
 type LLM struct {
 	Name           string  `yaml:"name,omitempty" json:"name,omitempty" desc:"The name (or call it 'id') of the LLM. e.g. my-favorite-gemini-king. It is required when api.llm is set."`
 	Default        bool    `yaml:"default,omitempty" json:"default,omitempty" desc:"Whether this LLM is the default LLM. Only one LLM can be the default."`
-	Provider       string  `yaml:"provider,omitempty" json:"provider,omitempty" desc:"The provider of the LLM, one of openai, openrouter, deepseek, gemini, volc, siliconflow. e.g. openai"`
+	Provider       string  `yaml:"provider,omitempty" json:"provider,omitempty" desc:"The provider of the LLM, one of openai, openrouter, requesty, deepseek, gemini, volc, siliconflow. e.g. openai"`
 	Endpoint       string  `yaml:"endpoint,omitempty" json:"endpoint,omitempty" desc:"The custom endpoint of the LLM. e.g. https://api.openai.com/v1"`
 	APIKey         string  `yaml:"api_key,omitempty" json:"api_key,omitempty" desc:"The API key of the LLM. It is required when api.llm is set."`
 	Model          string  `yaml:"model,omitempty" json:"model,omitempty" desc:"The model of the LLM. e.g. gpt-4o-mini. Can not be empty with embedding_model at same time when api.llm is set."`

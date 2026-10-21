@@ -78,6 +78,7 @@ type ProviderType string
 const (
 	ProviderTypeOpenAI      ProviderType = "openai"
 	ProviderTypeOpenRouter  ProviderType = "openrouter"
+	ProviderTypeRequesty    ProviderType = "requesty"
 	ProviderTypeDeepSeek    ProviderType = "deepseek"
 	ProviderTypeGemini      ProviderType = "gemini"
 	ProviderTypeVolc        ProviderType = "volc" // Rename MaaS to ARK. 😄
@@ -87,6 +88,7 @@ const (
 var defaultEndpoints = map[ProviderType]string{
 	ProviderTypeOpenAI:      "https://api.openai.com/v1",
 	ProviderTypeOpenRouter:  "https://openrouter.ai/api/v1",
+	ProviderTypeRequesty:    "https://router.requesty.ai/v1",
 	ProviderTypeDeepSeek:    "https://api.deepseek.com/v1",
 	ProviderTypeGemini:      "https://generativelanguage.googleapis.com/v1beta",
 	ProviderTypeVolc:        "https://ark.cn-beijing.volces.com/api/v3",
@@ -101,7 +103,7 @@ func (c *Config) Validate() error { //nolint:cyclop
 	switch c.Provider {
 	case "":
 		c.Provider = ProviderTypeOpenAI
-	case ProviderTypeOpenAI, ProviderTypeOpenRouter, ProviderTypeDeepSeek,
+	case ProviderTypeOpenAI, ProviderTypeOpenRouter, ProviderTypeRequesty, ProviderTypeDeepSeek,
 		ProviderTypeGemini, ProviderTypeVolc, ProviderTypeSiliconFlow:
 	default:
 		return errors.Errorf("invalid provider: %s", c.Provider)
@@ -329,7 +331,7 @@ func (f *factory) Get(name string) LLM {
 
 func (f *factory) new(c *Config) LLM {
 	switch c.Provider {
-	case ProviderTypeOpenAI, ProviderTypeOpenRouter, ProviderTypeDeepSeek, ProviderTypeVolc, ProviderTypeSiliconFlow: //nolint:lll
+	case ProviderTypeOpenAI, ProviderTypeOpenRouter, ProviderTypeRequesty, ProviderTypeDeepSeek, ProviderTypeVolc, ProviderTypeSiliconFlow: //nolint:lll
 		return newCached(newOpenAI(c), f.Dependencies().KVStorage)
 
 	case ProviderTypeGemini:
